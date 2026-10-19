@@ -115,7 +115,8 @@ class JSONStorage(Storage):
 
         # Create the file if it doesn't exist and creating is allowed by the
         # access mode
-        if any([character in self._mode for character in ('+', 'w', 'a')]):  # any of the writing modes
+        # Create the file for any of the writing modes.
+        if any(character in self._mode for character in ('+', 'w', 'a')):
             touch(path, create_dirs=create_dirs)
 
         # Open the file for reading/writing
@@ -176,7 +177,6 @@ class JSONStorage(Storage):
         finally:
             if temporary is not None:
                 os.unlink(temporary)
-
 
 
 class MemoryStorage(Storage):

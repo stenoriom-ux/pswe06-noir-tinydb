@@ -1,6 +1,7 @@
 """NOIR acceptance tests for atomic JSONStorage writes."""
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -58,7 +59,7 @@ def test_hu3_replace_failure_cleans_temp_and_allows_retry(tmp_path, monkeypatch)
 
     def fail_replace(source, destination):
         assert source != destination
-        assert json.loads(open(source, encoding='utf-8').read()) != old
+        assert json.loads(Path(source).read_text(encoding='utf-8')) != old
         raise OSError('injected replacement failure')
 
     with monkeypatch.context() as patch:
