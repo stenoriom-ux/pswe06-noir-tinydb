@@ -1,0 +1,37 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-9.0.2, pluggy-1.6.0
+rootdir: /Users/glovooker/.codex/.chatgpt-projects/g-p-6791a665a8988191b61132f59cfa98fc/trabajos/PSWE-06/tinydb
+configfile: pytest.ini
+plugins: mypy-1.0.1, cov-7.0.0
+collected 229 items
+
+tests/test_atomic_storage.py .......                                     [  3%]
+tests/test_middlewares.py ........                                       [  6%]
+tests/test_operations.py ..............                                  [ 12%]
+tests/test_queries.py .................................                  [ 27%]
+tests/test_storages.py ..............                                    [ 33%]
+tests/test_tables.py ..............................                      [ 46%]
+tests/test_tinydb.py ................................................... [ 68%]
+.............................................................            [ 95%]
+tests/test_utils.py ...........                                          [100%]
+
+================================ tests coverage ================================
+______________ coverage: platform darwin, python 3.12.14-final-0 _______________
+
+Name                    Stmts   Miss Branch BrPart  Cover   Missing
+-------------------------------------------------------------------
+tinydb/__init__.py          5      0      0      0   100%
+tinydb/database.py         53      0     10      0   100%
+tinydb/middlewares.py      33      0      6      0   100%
+tinydb/mypy_plugin.py      26     26      2      0     0%   1-39
+tinydb/operations.py       26      0      0      0   100%
+tinydb/queries.py         130      2     30      4    96%   51->exit, 53->exit, 120, 130
+tinydb/storages.py         69      0     12      0   100%
+tinydb/table.py           234      1    100      8    97%   135, 286->exit, 289->exit, 294->exit, 299->exit, 304->exit, 309->exit, 314->exit, 319->exit
+tinydb/utils.py            76      1     18      1    98%   33
+tinydb/version.py           1      0      0      0   100%
+-------------------------------------------------------------------
+TOTAL                     653     30    178     13    95%
+Coverage HTML written to dir evidence/htmlcov
+Coverage JSON written to file evidence/coverage.json
+============================= 229 passed in 0.91s ==============================

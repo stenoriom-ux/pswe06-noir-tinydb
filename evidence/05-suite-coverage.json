@@ -1,0 +1,18 @@
+{
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "-o",
+    "addopts=",
+    "--cov=tinydb",
+    "--cov-branch",
+    "--cov-report=term-missing",
+    "--cov-report=json:evidence/coverage.json",
+    "--cov-report=html:evidence/htmlcov",
+    "tests"
+  ],
+  "exit_code": 0,
+  "utc": "2026-10-19T06:39:26.501280+00:00",
+  "commit": "2e24c5899dd400b18212e2fd5d4932725dcb247f"
+}

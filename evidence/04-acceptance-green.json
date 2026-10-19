@@ -1,0 +1,13 @@
+{
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "-o",
+    "addopts=",
+    "tests/test_atomic_storage.py"
+  ],
+  "exit_code": 0,
+  "utc": "2026-10-19T06:39:25.086657+00:00",
+  "commit": "2e24c5899dd400b18212e2fd5d4932725dcb247f"
+}

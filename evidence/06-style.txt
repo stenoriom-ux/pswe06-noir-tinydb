@@ -1,0 +1,13 @@
+tinydb/database.py:106:100: E501 line too long (109 > 99 characters)
+tinydb/queries.py:524:1: E302 expected 2 blank lines, found 1
+tinydb/table.py:333:1: W293 blank line contains whitespace
+tests/test_queries.py:41:5: E731 do not assign a lambda expression, use a def
+tests/test_queries.py:48:5: E731 do not assign a lambda expression, use a def
+tests/test_queries.py:200:24: E741 ambiguous variable name 'l'
+tests/test_tables.py:82:5: E731 do not assign a lambda expression, use a def
+tests/test_tinydb.py:824:5: E731 do not assign a lambda expression, use a def
+tests/test_utils.py:102:1: W293 blank line contains whitespace
+tests/test_utils.py:107:1: W293 blank line contains whitespace
+tests/test_utils.py:114:1: W293 blank line contains whitespace
+tests/test_utils.py:118:1: W293 blank line contains whitespace
+tests/test_utils.py:125:1: E302 expected 2 blank lines, found 1

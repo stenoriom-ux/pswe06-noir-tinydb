@@ -1,0 +1,14 @@
+{
+  "commit": "4aa53111d72c9cbaafcdc039211caf49f4face6f",
+  "command": [
+    "python",
+    "-m",
+    "pycodestyle",
+    "--max-line-length=99",
+    "tinydb",
+    "tests"
+  ],
+  "exit_code": 1,
+  "scope": "unchanged baseline in ../tinydb-baseline",
+  "findings": 14
+}

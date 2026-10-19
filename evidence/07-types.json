@@ -1,0 +1,11 @@
+{
+  "command": [
+    "python",
+    "-m",
+    "mypy",
+    "tinydb"
+  ],
+  "exit_code": 0,
+  "utc": "2026-10-19T06:39:27.600901+00:00",
+  "commit": "2e24c5899dd400b18212e2fd5d4932725dcb247f"
+}

@@ -1,0 +1,13 @@
+{
+  "command": [
+    "python",
+    "-m",
+    "pycodestyle",
+    "--config=.pycodestyle",
+    "tinydb",
+    "tests"
+  ],
+  "exit_code": 1,
+  "utc": "2026-10-19T06:39:26.693315+00:00",
+  "commit": "2e24c5899dd400b18212e2fd5d4932725dcb247f"
+}
