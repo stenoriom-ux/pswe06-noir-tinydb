@@ -3,9 +3,10 @@ Contains the :class:`base class <tinydb.storages.Storage>` for storages and
 implementations.
 """
 
-import io
 import json
 import os
+import stat
+import tempfile
 import warnings
 from abc import ABC, abstractmethod
 from typing import Any, Optional
@@ -102,6 +103,7 @@ class JSONStorage(Storage):
 
         super().__init__()
 
+        self._path = os.path.realpath(path)
         self._mode = access_mode
         self.kwargs = kwargs
 
@@ -140,25 +142,41 @@ class JSONStorage(Storage):
             return json.load(self._handle)
 
     def write(self, data: dict[str, dict[str, Any]]):
-        # Move the cursor to the beginning of the file just in case
-        self._handle.seek(0)
+        if not self._handle.writable():
+            raise IOError(
+                'Cannot write to the database. Access mode is "{0}"'.format(
+                    self._mode))
 
-        # Serialize the database state using the user-provided arguments
         serialized = json.dumps(data, **self.kwargs)
-
-        # Write the serialized data to the file
+        temporary = None
         try:
-            self._handle.write(serialized)
-        except io.UnsupportedOperation:
-            raise IOError('Cannot write to the database. Access mode is "{0}"'.format(self._mode))
+            # Stage the complete document on the same filesystem. The live
+            # database is untouched until synchronization succeeds.
+            with tempfile.NamedTemporaryFile(
+                    mode='w', encoding=self._handle.encoding,
+                    dir=os.path.dirname(self._path), prefix='.tinydb-',
+                    suffix='.tmp', delete=False) as staged:
+                temporary = staged.name
+                os.chmod(temporary, stat.S_IMODE(os.stat(self._path).st_mode))
+                staged.write(serialized)
+                staged.flush()
+                os.fsync(staged.fileno())
 
-        # Ensure the file has been written
-        self._handle.flush()
-        os.fsync(self._handle.fileno())
+            # Close before replacing for platforms that lock open files.
+            # Reopen even if replacement fails, so a retry remains possible.
+            self._handle.close()
+            try:
+                os.replace(temporary, self._path)
+                temporary = None
+            finally:
+                reopen_mode = 'rb+' if 'b' in self._mode else 'r+'
+                self._handle = open(
+                    self._path, mode=reopen_mode,
+                    encoding=None if 'b' in self._mode else staged.encoding)
+        finally:
+            if temporary is not None:
+                os.unlink(temporary)
 
-        # Remove data that is behind the new cursor in case the file has
-        # gotten shorter
-        self._handle.truncate()
 
 
 class MemoryStorage(Storage):

@@ -1,0 +1,69 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-9.0.2, pluggy-1.6.0
+rootdir: /Users/glovooker/.codex/.chatgpt-projects/g-p-6791a665a8988191b61132f59cfa98fc/trabajos/PSWE-06/tinydb
+configfile: pytest.ini
+plugins: mypy-1.0.1, cov-7.0.0
+collected 7 items
+
+tests/test_atomic_storage.py F..F...                                     [100%]
+
+=================================== FAILURES ===================================
+__________________ test_hu1_fsync_failure_preserves_original ___________________
+
+tmp_path = PosixPath('/private/var/folders/nx/z4_9bn213v5c8lvqfsc8s01r0000gn/T/pytest-of-glovooker/pytest-3/test_hu1_fsync_failure_preserv0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1097d59d0>
+
+    def test_hu1_fsync_failure_preserves_original(tmp_path, monkeypatch):
+        """A synchronization failure must not overwrite the committed JSON."""
+        path = tmp_path / 'db.json'
+        old = {'_default': {'1': {'value': 'previous committed value'}}}
+        path.write_text(json.dumps(old), encoding='utf-8')
+        before = path.read_bytes()
+        storage = JSONStorage(path, encoding='utf-8')
+    
+        def fail_sync(_fd):
+            raise OSError('injected synchronization failure')
+    
+        monkeypatch.setattr('tinydb.storages.os.fsync', fail_sync)
+        try:
+            with pytest.raises(OSError, match='injected synchronization failure'):
+                storage.write({'_default': {'1': {'value': 'new'}}})
+        finally:
+            storage.close()
+    
+>       assert path.read_bytes() == before
+E       assert b'{"_default"...ted value"}}}' == b'{"_default"...ted value"}}}'
+E         
+E         At index 30 diff: b'n' != b'p'
+E         Use -v to get more diff
+
+tests/test_atomic_storage.py:28: AssertionError
+____________ test_hu3_replace_failure_cleans_temp_and_allows_retry _____________
+
+tmp_path = PosixPath('/private/var/folders/nx/z4_9bn213v5c8lvqfsc8s01r0000gn/T/pytest-of-glovooker/pytest-3/test_hu3_replace_failure_clean0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x1097ec3b0>
+
+    def test_hu3_replace_failure_cleans_temp_and_allows_retry(tmp_path, monkeypatch):
+        path = tmp_path / 'db.json'
+        old = {'_default': {'1': {'value': 'old'}}}
+        path.write_text(json.dumps(old), encoding='utf-8')
+        before = path.read_bytes()
+        storage = JSONStorage(path, encoding='utf-8')
+    
+        def fail_replace(source, destination):
+            assert source != destination
+            assert json.loads(open(source, encoding='utf-8').read()) != old
+            raise OSError('injected replacement failure')
+    
+        with monkeypatch.context() as patch:
+            patch.setattr('tinydb.storages.os.replace', fail_replace)
+            try:
+>               with pytest.raises(OSError, match='injected replacement failure'):
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E               Failed: DID NOT RAISE <class 'OSError'>
+
+tests/test_atomic_storage.py:67: Failed
+=========================== short test summary info ============================
+FAILED tests/test_atomic_storage.py::test_hu1_fsync_failure_preserves_original
+FAILED tests/test_atomic_storage.py::test_hu3_replace_failure_cleans_temp_and_allows_retry
+========================= 2 failed, 5 passed in 0.04s ==========================
