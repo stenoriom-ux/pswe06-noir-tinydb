@@ -1,0 +1,17 @@
+============================= test session starts ==============================
+platform darwin -- Python 3.12.14, pytest-9.0.2, pluggy-1.6.0
+rootdir: /Users/glovooker/.codex/.chatgpt-projects/g-p-6791a665a8988191b61132f59cfa98fc/trabajos/PSWE-06/tinydb
+configfile: pytest.ini
+plugins: mypy-1.0.1, cov-7.0.0
+collected 222 items
+
+tests/test_middlewares.py ........                                       [  3%]
+tests/test_operations.py ..............                                  [  9%]
+tests/test_queries.py .................................                  [ 24%]
+tests/test_storages.py ..............                                    [ 31%]
+tests/test_tables.py ..............................                      [ 44%]
+tests/test_tinydb.py ................................................... [ 67%]
+.............................................................            [ 95%]
+tests/test_utils.py ...........                                          [100%]
+
+============================= 222 passed in 0.45s ==============================

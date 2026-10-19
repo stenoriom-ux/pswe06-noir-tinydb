@@ -1,0 +1,8 @@
+pytest==9.0.2
+pytest-cov==7.0.0
+coverage==7.16.2
+pycodestyle==2.14.0
+PyYAML==6.0.3
+mypy==1.19.1
+pytest-mypy==1.0.1
+types-PyYAML==6.0.12.20250915
