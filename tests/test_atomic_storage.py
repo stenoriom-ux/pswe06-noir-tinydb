@@ -120,3 +120,31 @@ def test_atomic_preserves_permissions(tmp_path):
     finally:
         storage.close()
     assert path.stat().st_mode & 0o777 == 0o640
+
+@pytest.mark.skipif(os.name == 'nt', reason='directory sync is POSIX only')   # NUEVO
+def test_hu1_directory_synced_after_replace(tmp_path, monkeypatch):           # NUEVO
+    """The parent directory must be synchronized after the replacement."""
+    path = tmp_path / 'db.json'
+    path.write_text('{}', encoding='utf-8')
+    storage = JSONStorage(path, encoding='utf-8')
+    events = []
+    real_fsync = os.fsync
+    real_replace = os.replace
+
+    def spy_fsync(fd):
+        if stat.S_ISDIR(os.fstat(fd).st_mode):
+            events.append('dir_sync')
+        real_fsync(fd)
+
+    def spy_replace(source, destination):
+        real_replace(source, destination)
+        events.append('replace')
+
+    monkeypatch.setattr('tinydb.storages.os.fsync', spy_fsync)
+    monkeypatch.setattr('tinydb.storages.os.replace', spy_replace)
+    try:
+        storage.write({'_default': {'1': {'value': 'new'}}})
+    finally:
+        storage.close()
+
+    assert events == ['replace', 'dir_sync']
