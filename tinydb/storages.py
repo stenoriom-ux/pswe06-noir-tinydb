@@ -76,6 +76,15 @@ class Storage(ABC):
 
         pass
 
+def _sync_directory(path: str) -> None:                      # <-- NUEVO
+    """Flush the directory entry of ``path`` to disk (POSIX only)."""   # NUEVO
+    if os.name == 'nt':  # pragma: no cover                  # <-- NUEVO
+        return                                               # <-- NUEVO
+    descriptor = os.open(os.path.dirname(path), os.O_RDONLY) # <-- NUEVO
+    try:                                                     # <-- NUEVO
+        os.fsync(descriptor)                                 # <-- NUEVO
+    finally:                                                 # <-- NUEVO
+        os.close(descriptor)                                 # <-- NUEVO
 
 class JSONStorage(Storage):
     """
@@ -169,6 +178,7 @@ class JSONStorage(Storage):
             try:
                 os.replace(temporary, self._path)
                 temporary = None
+                _sync_directory(self._path)    
             finally:
                 reopen_mode = 'rb+' if 'b' in self._mode else 'r+'
                 self._handle = open(
